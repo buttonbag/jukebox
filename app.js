@@ -9,6 +9,7 @@ import playlistsRouter from "#api/playlists";
 // use json body parser
 app.use(express.json());
 
+
 // invoke the routers
 app.use("/tracks", tracksRouter);
 app.use("/playlists", playlistsRouter);
@@ -16,6 +17,9 @@ app.use("/playlists", playlistsRouter);
 // postgres error handlers to send better error messages
 app.use((err,req,res,next)=>{
   // unique constraint violation
+  if(err.code === "22P02") {
+    return res.status(400).send(err.detail);
+  }
   if(err.code === "23505") {
     return res.status(400).send(err.detail);
   }

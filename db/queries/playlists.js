@@ -1,5 +1,6 @@
 import db from "#db/client";
 
+// POST /playlists creates a new empty playlist
 export async function createPlaylist(name, description) {
   const sql = `
   INSERT INTO playlists
@@ -24,18 +25,6 @@ export async function getPlaylists() {
   const { rows: playlists } = await db.query(sql);
   return playlists;
 }
-
-// POST /playlists creates a new empty playlist
-export async function getCreatePlaylist(name, description) {
-  const sql = `
-  INSERT INTO playlists (name, description)
-  VALUES ($1, $2)
-  RETURNING *
-  `;
-  const { rows: [playlist] } = await db.query(sql, [name, description]);
-  return playlist;
-}
-
 
 // GET /playlists/:id sends playlist specified by id
 export async function getPlaylistById(id) {
