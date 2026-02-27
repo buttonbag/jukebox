@@ -3,7 +3,7 @@ const router = express.Router();
 export default router;
 
 import { createPlaylist, getPlaylistById, getPlaylists } from "#db/queries/playlists";
-import { getTracksByPlaylistId } from "#db/queries/tracks";
+import { getTrackById, getTracksByPlaylistId } from "#db/queries/tracks";
 import { createPlaylistTrack } from "#db/queries/playlists_tracks";
 
 // GET /playlists sends array of all playlists
@@ -31,7 +31,7 @@ router.param("id", async(req, res, next, id)=>{
   next();
 });
 // GET /playlists/:id sends playlist specified by id
-router.get("/:id", async (req,res)=>{
+router.get("/:id", (req,res)=>{
   res.send(req.playlist);
 });
 
@@ -47,8 +47,11 @@ router.post("/:id/tracks", async (req,res)=>{
   if(!req.body) return res.status(400).send("Request body required.");
 
   const {trackId} = req.body;
-  if(!trackId) return res.status(400).send("Body missing: trackId.")
+  if(!trackId) return res.status(400).send("Body missing: trackId.");
   
+  const track = await getTrackById(trackId);
+  if(!track) return res.status(400).send("Track does not exist.");
+
   const playlistTracks = await createPlaylistTrack(req.playlist.id, trackId);
   res.status(201).send(playlistTracks);
 });

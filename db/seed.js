@@ -23,7 +23,7 @@ async function seed() {
   // seed the database with at least 15 playlists_tracks 
   // some of the seeded tracks belong to some of the seeded playlists.
   for (let i = 1; i <= 15; i++) {
-    const playlistId = 1 + Math.floor(i / 2);
+    const playlistId = 1 + Math.floor(i / 3);
     await createPlaylistTrack(playlistId, i);
   }
   
